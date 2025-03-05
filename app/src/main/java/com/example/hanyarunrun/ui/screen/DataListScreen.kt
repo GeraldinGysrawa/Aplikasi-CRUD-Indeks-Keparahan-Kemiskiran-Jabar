@@ -1,4 +1,4 @@
-package com.example.hanyarunrun.ui
+package com.example.hanyarunrun.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

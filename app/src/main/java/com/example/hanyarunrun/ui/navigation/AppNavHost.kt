@@ -1,4 +1,4 @@
-package com.example.hanyarunrun.ui
+package com.example.hanyarunrun.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -6,6 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.hanyarunrun.ui.screen.DataEntryScreen
+import com.example.hanyarunrun.ui.screen.DataListScreen
+import com.example.hanyarunrun.ui.screen.EditScreen
 import com.example.hanyarunrun.viewmodel.DataViewModel
 
 @Composable

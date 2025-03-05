@@ -18,6 +18,9 @@ interface DataDao {
     @Query("SELECT * FROM data_table WHERE id = :dataId")
     suspend fun getById(dataId: Int): DataEntity?
 
+    @Query("SELECT COUNT(*) FROM data_table")
+    suspend  fun getCount(): Int
+
     @Delete
     suspend fun delete(data: DataEntity)
 }
