@@ -23,4 +23,7 @@ interface DataDao {
 
     @Delete
     suspend fun delete(data: DataEntity)
+
+    @Query("SELECT COUNT(*) FROM data_table")
+    fun getTotalCount(): LiveData<Int>
 }

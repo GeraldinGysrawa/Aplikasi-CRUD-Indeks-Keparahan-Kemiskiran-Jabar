@@ -6,5 +6,4 @@ sealed class Screen(val route: String) {
     object DataEntry : Screen("data_entry")
     object DataList : Screen("list")
     object Profile : Screen("profile")
-    object EditData : Screen("edit")
 }

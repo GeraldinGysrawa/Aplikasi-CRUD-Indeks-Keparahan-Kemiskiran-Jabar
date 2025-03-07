@@ -14,6 +14,8 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).dataDao()
     val dataList: LiveData<List<DataEntity>> = dao.getAll()
 
+    val totalData: LiveData<Int> = dao.getTotalCount() // Ini tempatnya
+
     fun insertData(
         kodeProvinsi: String,
         namaProvinsi: String,

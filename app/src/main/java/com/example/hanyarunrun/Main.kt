@@ -57,7 +57,7 @@ fun Main(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.DataEntry.route,
+            startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
 
@@ -73,6 +73,9 @@ fun Main(
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id") ?: 0
                 EditScreen(navController = navController, viewModel = viewModel, dataId = id)
+            }
+            composable(Screen.Home.route) {
+                HomeScreen(viewModel = viewModel)
             }
             composable(Screen.Profile.route){
                 ProfileScreen(navController = navController, viewModel = profileViewModel, )
@@ -92,15 +95,23 @@ public fun BottomBar(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         val navigationItems = listOf(
+
             NavigationItem(
-                title = "Data Entry",
-                icon = Icons.Default.Add,
-                screen = Screen.DataEntry
+                title = "Home",
+                icon = Icons.Default.Home,
+                screen = Screen.Home
+
+
             ),
             NavigationItem(
                 title = "Data List",
                 icon = Icons.Default.List,
                 screen = Screen.DataList
+            ),
+            NavigationItem(
+                title = "Data Entry",
+                icon = Icons.Default.Add,
+                screen = Screen.DataEntry
             ),
             NavigationItem(
                 title = "Profile",
