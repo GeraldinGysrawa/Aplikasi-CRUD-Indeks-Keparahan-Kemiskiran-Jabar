@@ -25,9 +25,9 @@ fun EditScreen(
 ) {
     val context = LocalContext.current
 
-    var kodeProvinsi by remember { mutableStateOf("") }
+    var kodeProvinsi by remember { mutableStateOf(0) }
     var namaProvinsi by remember { mutableStateOf("") }
-    var kodeKabupatenKota by remember { mutableStateOf("") }
+    var kodeKabupatenKota by remember { mutableStateOf(0) }
     var namaKabupatenKota by remember { mutableStateOf("") }
     var indeksKeparahanKemiskinan by remember { mutableStateOf("") }
     var satuan by remember { mutableStateOf("") }
@@ -61,43 +61,59 @@ fun EditScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
+
+            // Input Kode Provinsi
             OutlinedTextField(
-                value = kodeProvinsi,
-                onValueChange = { kodeProvinsi = it },
+                value = if (kodeProvinsi == 0) "" else kodeProvinsi.toString(),
+                onValueChange = { kodeProvinsi = it.toIntOrNull() ?: 0 },
                 label = { Text("Kode Provinsi") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Input Nama Provinsi
             OutlinedTextField(
                 value = namaProvinsi,
                 onValueChange = { namaProvinsi = it },
                 label = { Text("Nama Provinsi") },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Input Kode Kabupaten/Kota
             OutlinedTextField(
-                value = kodeKabupatenKota,
-                onValueChange = { kodeKabupatenKota = it },
+                value = if (kodeKabupatenKota == 0) "" else kodeKabupatenKota.toString(),
+                onValueChange = { kodeKabupatenKota = it.toIntOrNull() ?: 0 },
                 label = { Text("Kode Kabupaten/Kota") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Input Nama Kabupaten/Kota
             OutlinedTextField(
                 value = namaKabupatenKota,
                 onValueChange = { namaKabupatenKota = it },
                 label = { Text("Nama Kabupaten/Kota") },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Input Indeks Keparahan Kemiskinan
             OutlinedTextField(
                 value = indeksKeparahanKemiskinan,
                 onValueChange = { indeksKeparahanKemiskinan = it },
-                label = { Text("indeksKeparahanKemiskinan") },
+                label = { Text("Indeks Keparahan Kemiskinan") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Input Satuan
             OutlinedTextField(
                 value = satuan,
                 onValueChange = { satuan = it },
                 label = { Text("Satuan") },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // Input Tahun
             OutlinedTextField(
                 value = tahun,
                 onValueChange = { tahun = it },
@@ -105,7 +121,10 @@ fun EditScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Tombol Update
             Button(
                 onClick = {
                     val updatedData = DataEntity(

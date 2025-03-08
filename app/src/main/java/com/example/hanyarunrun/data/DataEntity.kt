@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 data class DataEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val kodeProvinsi: String,
+    val kodeProvinsi: Int,
     val namaProvinsi: String,
-    val kodeKabupatenKota: String,
+    val kodeKabupatenKota: Int,
     val namaKabupatenKota: String,
     val indeksKeparahanKemiskinan: Double,
     val satuan: String,

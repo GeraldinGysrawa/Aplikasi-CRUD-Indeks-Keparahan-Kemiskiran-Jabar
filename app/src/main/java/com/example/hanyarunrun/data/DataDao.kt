@@ -6,24 +6,31 @@ import androidx.room.*
 @Dao
 interface DataDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(data: List<DataEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(data: DataEntity)
 
     @Update
     suspend fun update(data: DataEntity)
 
-    @Query("SELECT * FROM data_table ORDER BY id DESC")
-    fun getAll(): LiveData<List<DataEntity>>
-
-    @Query("SELECT * FROM data_table WHERE id = :dataId")
-    suspend fun getById(dataId: Int): DataEntity?
-
-    @Query("SELECT COUNT(*) FROM data_table")
-    suspend  fun getCount(): Int
-
     @Delete
     suspend fun delete(data: DataEntity)
 
+    @Query("DELETE FROM data_table")
+    suspend fun deleteAll()
+
+    @Query("SELECT * FROM data_table ORDER BY tahun DESC")
+    fun getAll(): LiveData<List<DataEntity>> //
+
     @Query("SELECT COUNT(*) FROM data_table")
     fun getTotalCount(): LiveData<Int>
+
+    @Query("SELECT * FROM data_table WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Int): DataEntity?
+
+    @Query("DELETE FROM data_table WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }
+

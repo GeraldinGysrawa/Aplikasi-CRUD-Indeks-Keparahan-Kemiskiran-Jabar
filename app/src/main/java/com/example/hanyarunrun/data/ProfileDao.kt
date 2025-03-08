@@ -23,4 +23,7 @@ interface ProfileDao {
 
     @Query("SELECT * FROM profile_table WHERE id = 1 LIMIT 1")
     suspend fun getProfile(): ProfileEntity?
+
+    @Query("UPDATE profile_table SET photoPath = :path WHERE id = 1")
+    suspend fun updatePhotoPath(path: String)
 }

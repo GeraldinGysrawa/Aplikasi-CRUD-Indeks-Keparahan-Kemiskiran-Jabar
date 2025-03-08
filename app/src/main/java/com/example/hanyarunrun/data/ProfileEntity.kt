@@ -9,5 +9,6 @@ data class ProfileEntity(
     var username: String = "Gerald",
     var uid: String = "231511011",
     var email: String = "geraldin@gmail.com",
+    var photoPath: String? = null
 
 )

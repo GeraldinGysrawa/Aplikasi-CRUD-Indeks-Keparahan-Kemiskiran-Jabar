@@ -4,11 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +17,8 @@ import com.example.hanyarunrun.viewmodel.DataViewModel
 @Composable
 fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) {
     val context = LocalContext.current
+
+    // State untuk input data
     var kodeProvinsi by remember { mutableStateOf("") }
     var namaProvinsi by remember { mutableStateOf("") }
     var kodeKabupatenKota by remember { mutableStateOf("") }
@@ -28,6 +26,10 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
     var indeksKeparahanKemiskinan by remember { mutableStateOf("") }
     var satuan by remember { mutableStateOf("") }
     var tahun by remember { mutableStateOf("") }
+
+    // State untuk validasi error
+    var isError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -43,76 +45,140 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 text = "Input Data",
                 style = MaterialTheme.typography.headlineMedium
             )
+
+            // Input Kode Provinsi (Harus Angka)
             OutlinedTextField(
                 value = kodeProvinsi,
                 onValueChange = { kodeProvinsi = it },
                 label = { Text("Kode Provinsi") },
-                modifier = Modifier.fillMaxWidth()
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && kodeProvinsi.toIntOrNull() == null,
+                supportingText = {
+                    if (isError && kodeProvinsi.toIntOrNull() == null) Text("Kode Provinsi harus berupa angka")
+                }
             )
+
+            // Input Nama Provinsi
             OutlinedTextField(
                 value = namaProvinsi,
                 onValueChange = { namaProvinsi = it },
                 label = { Text("Nama Provinsi") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && namaProvinsi.isBlank(),
+                supportingText = {
+                    if (isError && namaProvinsi.isBlank()) Text("Nama Provinsi tidak boleh kosong")
+                }
             )
+
+            // Input Kode Kabupaten/Kota (Harus Angka)
             OutlinedTextField(
                 value = kodeKabupatenKota,
                 onValueChange = { kodeKabupatenKota = it },
                 label = { Text("Kode Kabupaten/Kota") },
-                modifier = Modifier.fillMaxWidth()
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && kodeKabupatenKota.toIntOrNull() == null,
+                supportingText = {
+                    if (isError && kodeKabupatenKota.toIntOrNull() == null) Text("Kode Kabupaten/Kota harus berupa angka")
+                }
             )
+
+            // Input Nama Kabupaten/Kota
             OutlinedTextField(
                 value = namaKabupatenKota,
                 onValueChange = { namaKabupatenKota = it },
                 label = { Text("Nama Kabupaten/Kota") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && namaKabupatenKota.isBlank(),
+                supportingText = {
+                    if (isError && namaKabupatenKota.isBlank()) Text("Nama Kabupaten/Kota tidak boleh kosong")
+                }
             )
+
+            // Input Indeks Keparahan Kemiskinan (harus angka valid)
             OutlinedTextField(
                 value = indeksKeparahanKemiskinan,
                 onValueChange = { indeksKeparahanKemiskinan = it },
                 label = { Text("Indeks Keparahan Kemiskinan") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && indeksKeparahanKemiskinan.toDoubleOrNull() == null,
+                supportingText = {
+                    if (isError && indeksKeparahanKemiskinan.toDoubleOrNull() == null)
+                        Text("Masukkan angka yang valid")
+                }
             )
+
+            // Input Satuan
             OutlinedTextField(
                 value = satuan,
                 onValueChange = { satuan = it },
                 label = { Text("Satuan") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && satuan.isBlank(),
+                supportingText = {
+                    if (isError && satuan.isBlank()) Text("Satuan tidak boleh kosong")
+                }
             )
+
+            // Input Tahun (harus angka dan >= 2000)
             OutlinedTextField(
                 value = tahun,
                 onValueChange = { tahun = it },
                 label = { Text("Tahun") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = isError && (tahun.toIntOrNull() == null || tahun.toInt() < 2000),
+                supportingText = {
+                    if (isError && tahun.toIntOrNull() == null) {
+                        Text("Masukkan tahun yang valid")
+                    } else if (isError && tahun.toInt() < 2000) {
+                        Text("Tahun tidak boleh kurang dari 2000")
+                    }
+                }
             )
+
+            // Tombol Submit
             Button(
                 onClick = {
-                    // Memanggil fungsi insertData pada ViewModel
-                    viewModel.insertData(
-                        kodeProvinsi = kodeProvinsi,
-                        namaProvinsi = namaProvinsi,
-                        kodeKabupatenKota = kodeKabupatenKota,
-                        namaKabupatenKota = namaKabupatenKota,
-                        indeksKeparahanKemiskinan = indeksKeparahanKemiskinan,
-                        satuan = satuan,
-                        tahun = tahun
-                    )
-                    Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
-                    // Navigasi ke tampilan daftar dat
+                    // Cek validasi sebelum submit
+                    isError = false
+                    errorMessage = ""
+
+                    val kodeProvinsiInt = kodeProvinsi.toIntOrNull()
+                    val kodeKabupatenKotaInt = kodeKabupatenKota.toIntOrNull()
+                    val tahunInt = tahun.toIntOrNull()
+                    val indeksDouble = indeksKeparahanKemiskinan.toDoubleOrNull()
+
+                    if (kodeProvinsiInt == null || kodeKabupatenKotaInt == null ||
+                        namaProvinsi.isBlank() || namaKabupatenKota.isBlank() ||
+                        indeksDouble == null || satuan.isBlank() ||
+                        tahunInt == null || tahunInt < 2000
+                    ) {
+                        isError = true
+                        errorMessage = "Pastikan semua input valid!"
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Jika valid, panggil ViewModel untuk menyimpan data
+                        viewModel.insertData(
+                            kodeProvinsi = kodeProvinsiInt,
+                            namaProvinsi = namaProvinsi,
+                            kodeKabupatenKota = kodeKabupatenKotaInt,
+                            namaKabupatenKota = namaKabupatenKota,
+                            indeksKeparahanKemiskinan = indeksDouble.toString(),
+                            satuan = satuan,
+                            tahun = tahunInt.toString()
+                        )
+                        Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+
+                        // Navigasi ke tampilan daftar data
+                        navController.popBackStack()
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Submit Data")
-            }
-            Button(
-                onClick = {
-                    navController.navigate("list")
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Lihat Data")
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.example.hanyarunrun.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -11,32 +13,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).profileDao()
     val dataList: LiveData<List<ProfileEntity>> = dao.getAll()
 
-    var profile: ProfileEntity? = null
-
     private val _profileStateFlow = MutableStateFlow<ProfileEntity?>(null)
     val profileStateFlow: StateFlow<ProfileEntity?> = _profileStateFlow
-
-    init {
-        viewModelScope.launch {
-            _profileStateFlow.value = dao.getProfile() ?: ProfileEntity()
-        }
-    }
 
     init {
         loadProfile()
     }
 
-
-    fun insertData(
-        username: String,
-        uid: String,
-        email: String
-    ) {
+    fun insertData(username: String, uid: String, email: String) {
         viewModelScope.launch {
             dao.insert(
                 ProfileEntity(
@@ -51,7 +41,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun updateData(data: ProfileEntity) {
         viewModelScope.launch {
             dao.update(data)
-            _profileStateFlow.value = data // Update state to trigger recomposition
+            _profileStateFlow.value = data // Pastikan UI diperbarui
         }
     }
 
@@ -71,7 +61,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             val existingProfile = dao.getProfile()
             if (existingProfile == null) {
-                // If no profile exists, insert default profile
                 val defaultProfile = ProfileEntity()
                 dao.insert(defaultProfile)
                 _profileStateFlow.value = defaultProfile
@@ -79,5 +68,34 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 _profileStateFlow.value = existingProfile
             }
         }
+    }
+
+    fun updatePhotoPath(photoPath: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.updatePhotoPath(photoPath ?: "")
+
+            // Load ulang data dari database agar profileStateFlow terupdate
+            val updatedProfile = dao.getProfile()
+            withContext(Dispatchers.Main) {
+                _profileStateFlow.value = updatedProfile
+            }
+        }
+    }
+}
+
+fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
+    val fileName = "profile_image.jpg"
+    val file = File(context.filesDir, fileName)
+
+    return try {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            file.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+        file.absolutePath // Kembalikan path untuk disimpan di database
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 }
