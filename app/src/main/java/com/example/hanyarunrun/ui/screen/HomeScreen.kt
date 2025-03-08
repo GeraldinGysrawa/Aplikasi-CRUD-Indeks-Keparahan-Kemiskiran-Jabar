@@ -50,12 +50,7 @@ fun HomeScreen(viewModel: DataViewModel) {
                 text = "Home",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Divider(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.onBackground,
-                thickness = 1.dp
+                color = Color.Black
             )
         }
 
