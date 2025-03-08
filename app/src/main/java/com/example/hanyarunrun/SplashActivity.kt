@@ -14,7 +14,7 @@ class SplashActivity : ComponentActivity() {
 
         // Delay splash screen selama 2 detik
         lifecycleScope.launch {
-            delay(1000L)
+            delay(2000L)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish() // Tutup SplashActivity agar tidak bisa dikembalikan dengan back button
         }

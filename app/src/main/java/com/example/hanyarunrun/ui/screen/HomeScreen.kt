@@ -148,7 +148,7 @@ fun GrafikScreen(viewModel: DataViewModel = viewModel()) {
                         val labels = dataPoints.map { it.tahun.toString() } // Tahun sebagai label
 
                         val dataSet = BarDataSet(entries, "Total Data per Tahun").apply {
-                            color = android.graphics.Color.BLUE
+                            color = android.graphics.Color.YELLOW
                             valueTextSize = 12f
                         }
 
