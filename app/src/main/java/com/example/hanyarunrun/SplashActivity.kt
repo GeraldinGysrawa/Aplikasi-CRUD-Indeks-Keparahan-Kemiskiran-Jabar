@@ -10,13 +10,13 @@ import kotlinx.coroutines.launch
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash) // Pastikan ada XML untuk tampilan Splash
+        setContentView(R.layout.activity_splash)
 
-        // Delay splash screen selama 2 detik
+
         lifecycleScope.launch {
             delay(2000L)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish() // Tutup SplashActivity agar tidak bisa dikembalikan dengan back button
+            finish()
         }
     }
 }
