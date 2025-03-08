@@ -121,41 +121,98 @@ fun TotalDataScreen(totalData: Int) {
 fun GrafikScreen(viewModel: DataViewModel = viewModel()) {
     val dataPoints by viewModel.graphData.observeAsState(emptyList())
 
-    if (dataPoints.isEmpty()) {
-        Text(text = "Tidak ada data", modifier = Modifier.padding(16.dp))
-    } else {
-        AndroidView(
-            factory = { context ->
-                BarChart(context).apply {
-                    val entries = dataPoints.mapIndexed { index, (tahun, jumlah) ->
-                        BarEntry(index.toFloat(), jumlah.toFloat())
+    val averageIndex by viewModel.averageIndex.observeAsState(0.0)
+    val minIndex by viewModel.minIndex.observeAsState(0.0)
+    val maxIndex by viewModel.maxIndex.observeAsState(0.0)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        if (dataPoints.isEmpty()) {
+            Text(text = "Tidak ada data", modifier = Modifier.padding(16.dp))
+        } else {
+            // Tambahkan judul grafik
+            Text(
+                text = "Grafik Total Data per Tahun",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            // Grafik batang
+            AndroidView(
+                factory = { context ->
+                    BarChart(context).apply {
+                        val entries = dataPoints.mapIndexed { index, (tahun, indeksKemiskinan) ->
+                            BarEntry(index.toFloat(), indeksKemiskinan.toFloat())
+                        }
+
+                        val labels = dataPoints.map { it.tahun.toString() } // Tahun sebagai label
+
+                        val dataSet = BarDataSet(entries, "Total Data per Tahun").apply {
+                            color = android.graphics.Color.BLUE
+                            valueTextSize = 12f
+                        }
+
+                        val barData = BarData(dataSet)
+                        this.data = barData
+
+                        // Atur sumbu X untuk menampilkan tahun
+                        this.xAxis.apply {
+                            valueFormatter = IndexAxisValueFormatter(labels)
+                            granularity = 1f
+                            position = XAxis.XAxisPosition.BOTTOM
+                        }
+
+                        this.invalidate() // Refresh chart
                     }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(16.dp)
+            )
 
-                    val labels = dataPoints.map { it.tahun.toString() } // Tahun sebagai label
+            // Tambahkan garis pemisah penuh sebelum statistik
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                color = MaterialTheme.colorScheme.onBackground,
+                thickness = 0.5.dp
+            )
 
-                    val dataSet = BarDataSet(entries, "Data per Tahun").apply {
-                        val BLUE = Color(0xFF0000FF)
-                        valueTextSize = 12f
-                    }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text(
+                    "Statistik Indeks Keparahan Kemiskinan",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.align(Alignment.Start)
+                )
 
-                    val barData = BarData(dataSet)
-                    this.data = barData
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    // Atur sumbu X untuk menampilkan tahun
-                    this.xAxis.apply {
-                        valueFormatter = IndexAxisValueFormatter(labels)
-                        granularity = 1f
-                        position = XAxis.XAxisPosition.BOTTOM
-                    }
-
-                    this.invalidate() // Refresh chart
+                Column(modifier = Modifier.align(Alignment.Start)) {
+                    Text("Nilai Terendah: ${String.format("%.2f", minIndex)}")
+                    Text("Nilai Tertinggi: ${String.format("%.2f", maxIndex)}")
+                    Text("Rata-rata: ${String.format("%.2f", averageIndex)}")
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(16.dp)
-        )
+            }
+        }
     }
 }
+
+
+
+
+
+
+
 

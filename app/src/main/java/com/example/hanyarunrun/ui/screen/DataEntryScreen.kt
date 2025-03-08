@@ -63,15 +63,20 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 }
             )
 
-            // Input Nama Provinsi
+            // Input Nama Provinsi (Harus Kapital)
             OutlinedTextField(
                 value = namaProvinsi,
-                onValueChange = { namaProvinsi = it },
+                onValueChange = { namaProvinsi = it.uppercase() }, // Ubah otomatis ke huruf besar
                 label = { Text("Nama Provinsi") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = isError && namaProvinsi.isBlank(),
+                isError = isError && (namaProvinsi.isBlank() || !namaProvinsi.matches(Regex("[A-Z ]+"))),
                 supportingText = {
-                    if (isError && namaProvinsi.isBlank()) Text("Nama Provinsi tidak boleh kosong")
+                    if (isError) {
+                        when {
+                            namaProvinsi.isBlank() -> Text("Nama Provinsi tidak boleh kosong")
+                            !namaProvinsi.matches(Regex("[A-Z ]+")) -> Text("Nama hanya boleh berisi huruf kapital")
+                        }
+                    }
                 }
             )
 
@@ -88,15 +93,20 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 }
             )
 
-            // Input Nama Kabupaten/Kota
+            // Input Nama Kabupaten/Kota (Harus Kapital)
             OutlinedTextField(
                 value = namaKabupatenKota,
-                onValueChange = { namaKabupatenKota = it },
+                onValueChange = { namaKabupatenKota = it.uppercase() }, // Ubah otomatis ke huruf besar
                 label = { Text("Nama Kabupaten/Kota") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = isError && namaKabupatenKota.isBlank(),
+                isError = isError && (namaKabupatenKota.isBlank() || !namaKabupatenKota.matches(Regex("[A-Z ]+"))),
                 supportingText = {
-                    if (isError && namaKabupatenKota.isBlank()) Text("Nama Kabupaten/Kota tidak boleh kosong")
+                    if (isError) {
+                        when {
+                            namaKabupatenKota.isBlank() -> Text("Nama Kabupaten/Kota tidak boleh kosong")
+                            !namaKabupatenKota.matches(Regex("[A-Z ]+")) -> Text("Nama hanya boleh berisi huruf kapital")
+                        }
+                    }
                 }
             )
 

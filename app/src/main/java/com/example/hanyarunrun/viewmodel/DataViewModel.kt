@@ -119,4 +119,17 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
     // Ambil data untuk grafik langsung dari DAO
     val graphData: LiveData<List<YearlyData>> = dataDao.getDataByYear().asLiveData()
 
+    // Statistik indeks kemiskinan (tanpa pengelompokan per tahun)
+    val averageIndex: LiveData<Double> = dao.getAll().map { list ->
+        list.map { it.indeksKeparahanKemiskinan }.average()
+    }
+
+    val minIndex: LiveData<Double> = dao.getAll().map { list ->
+        list.minOfOrNull { it.indeksKeparahanKemiskinan } ?: 0.0
+    }
+
+    val maxIndex: LiveData<Double> = dao.getAll().map { list ->
+        list.maxOfOrNull { it.indeksKeparahanKemiskinan } ?: 0.0
+    }
 }
+

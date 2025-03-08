@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -49,7 +50,7 @@ fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Home, contentDescription = "Sync Data")
+                Icon(Icons.Default.RestartAlt, contentDescription = "Sync Data")
             }
         }
     ) { paddingValues ->
