@@ -16,3 +16,8 @@ data class IndeksKemiskinanData(
     val satuan: String,
     val tahun: Int
 )
+
+data class YearlyData(
+    val tahun: Int,
+    val jumlah: Int
+)

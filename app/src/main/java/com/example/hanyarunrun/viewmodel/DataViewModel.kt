@@ -9,6 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import com.example.hanyarunrun.data.YearlyData
+import com.example.hanyarunrun.data.DataDao
+
 
 class DataViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -110,4 +113,10 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
             dao.getById(id)
         }
     }
+
+    private val dataDao: DataDao = AppDatabase.getDatabase(application).dataDao()
+
+    // Ambil data untuk grafik langsung dari DAO
+    val graphData: LiveData<List<YearlyData>> = dataDao.getDataByYear().asLiveData()
+
 }

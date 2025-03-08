@@ -9,8 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.hanyarunrun.viewmodel.DataViewModel
 
@@ -43,6 +45,8 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
         ) {
             Text(
                 text = "Input Data",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium
             )
 

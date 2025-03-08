@@ -2,6 +2,8 @@ package com.example.hanyarunrun.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface DataDao {
@@ -32,5 +34,8 @@ interface DataDao {
 
     @Query("DELETE FROM data_table WHERE id = :id")
     suspend fun deleteById(id: Int)
+
+    @Query("SELECT tahun, COUNT(*) as jumlah FROM data_table GROUP BY tahun ORDER BY tahun")
+    fun getDataByYear(): Flow<List<YearlyData>>
 }
 
